@@ -72,7 +72,7 @@
     "@aws-sdk/client-ses": "^3.862.0",
     "@aws-sdk/client-ssm": "^3.862.0",
     "@aws-sdk/lib-storage": "^3.862.0",
-    "@churchapps/apihelper": "^0.5.2",
+    "@churchapps/apihelper": "github:stephen-dahl/ApiHelper#railway",
     "@churchapps/content-provider-helper": "^0.0.9",
     "@codegenie/serverless-express": "^4.15.0",
     "@hubspot/api-client": "^13.1.0",

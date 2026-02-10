@@ -108,8 +108,13 @@ export class Environment extends EnvironmentBase {
       physicalPath = path.resolve(projectRoot, "config", file);
     }
 
-    const json = fs.readFileSync(physicalPath, "utf8");
-    const data = JSON.parse(json);
+    let data: Record<string, any> = {};
+    try {
+      const json = fs.readFileSync(physicalPath, "utf8");
+      data = JSON.parse(json);
+    } catch {
+      console.log("Config file not found, using environment variables");
+    }
     await this.populateBase(data, "API", environment);
 
     // Set current environment and server config
@@ -147,12 +152,13 @@ export class Environment extends EnvironmentBase {
 
   private static initializeModuleConfigs(config: any) {
     // These can be overridden in monolith for internal calls
-    this.membershipApi = config.membershipApi || config.apiUrl + "/membership";
-    this.attendanceApi = config.attendanceApi || config.apiUrl + "/attendance";
-    this.contentApi = config.contentApi || config.apiUrl + "/content";
-    this.givingApi = config.givingApi || config.apiUrl + "/giving";
-    this.messagingApi = config.messagingApi || config.apiUrl + "/messaging";
-    this.doingApi = config.doingApi || config.apiUrl + "/doing";
+    const apiUrl = process.env.API_URL || config.apiUrl || "";
+    this.membershipApi = process.env.API_MEMBERSHIP || config.membershipApi || apiUrl + "/membership";
+    this.attendanceApi = process.env.API_ATTENDANCE || config.attendanceApi || apiUrl + "/attendance";
+    this.contentApi = process.env.API_CONTENT || config.contentApi || apiUrl + "/content";
+    this.givingApi = process.env.API_GIVING || config.givingApi || apiUrl + "/giving";
+    this.messagingApi = process.env.API_MESSAGING || config.messagingApi || apiUrl + "/messaging";
+    this.doingApi = process.env.API_DOING || config.doingApi || apiUrl + "/doing";
   }
 
   private static async initializeDatabaseConnections(config: any) {
